@@ -1,0 +1,6 @@
+/_build
+/ebin
+/deps
+erl_crash.dump
+docs
+mix.lock
