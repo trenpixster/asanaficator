@@ -5,6 +5,8 @@
 Simple Elixir wrapper for the [Asana API](https://asana.com/developers/api-reference).
 Based on [Tentacat](https://github.com/edgurgel/tentacat).
 
+Documentation can be found [here](http://hexdocs.pm/asanaficator/).
+
 ## Features
 
 * Users
