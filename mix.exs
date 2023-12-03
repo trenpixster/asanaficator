@@ -7,12 +7,12 @@ defmodule Asanaficator.Mixfile do
 
   def project do
     [ app: :asanaficator,
-      version: "0.0.1",
-      elixir: "~> 1.0.0",
+      version: "0.0.2",
+      elixir: "~> 1.0",
       name: "Asanaficator",
       description: @description,
-      package: package,
-      deps: deps ]
+      package: package(),
+      deps: deps() ]
   end
 
   def application do
