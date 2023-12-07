@@ -79,6 +79,8 @@ defmodule Asanaficator do
     endpoint <> path
   end
 
+  # format for opt_fields:
+    # query = %{"opt_fields" => "assignee,name,due_at"}
   @spec build_qs([{atom, binary}]) :: binary
   defp build_qs([]), do: ""
   defp build_qs(kvs), do: to_string('?' ++ URI.encode_query(kvs))

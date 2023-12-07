@@ -1,6 +1,7 @@
 defmodule Asanaficator.Mixfile do
   use Mix.Project
 
+  Code.compiler_options(on_undefined_variable: :warn)
   @description """
     Simple Elixir wrapper for the Asana API
   """

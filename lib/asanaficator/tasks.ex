@@ -11,9 +11,9 @@ defmodule Asanaficator.Tasks do
 
   More info at: https://asana.com/developers/api-reference/tasks#get
   """
-  @spec find(binary | integer, Client.t) :: Asanaficator.response
-  def find(task_id, client \\ %Client{}) do
-    get "tasks/#{task_id}", client
+  @spec find(binary | integer, Client.t, List.t) :: Asanaficator.response
+  def find(task_id, client \\ %Client{}, params \\ []) do
+    get "tasks/#{task_id}", client, params
   end
 
 end
