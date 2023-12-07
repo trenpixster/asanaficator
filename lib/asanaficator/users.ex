@@ -7,12 +7,12 @@ defmodule Asanaficator.Users do
 
   ## Example
 
-      Asanaficator.Users.find 123456, client
+      Asanaficator.Users.get_user 123456, client
 
   More info at: https://asana.com/developers/api-reference/users#get-single
   """
-  @spec find(binary, Client.t) :: Asanaficator.response
-  def find(user, client \\ %Client{}) do
+  @spec get_user(binary, Client.t) :: Asanaficator.response
+  def get_user(user, client \\ %Client{}) do
     get "users/#{user}", client
   end
 

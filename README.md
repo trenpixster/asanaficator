@@ -57,7 +57,7 @@ iex> Asanaficator.Users.me client
 Getting a task
 
 ```iex
-iex> Asanaficator.Tasks.find(12345, client)
+iex> Asanaficator.Tasks.get_task(12345, client)
 %{"data" => %{"assignee" => nil, "assignee_status" => "upcoming",
     "completed" => false, "completed_at" => nil,
     "created_at" => "2015-06-30T00:40:30.971Z", "due_at" => nil,
