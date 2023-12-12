@@ -33,7 +33,7 @@ defmodule Asanaficator do
     status_code = response.status_code
     headers = response.headers
     body = response.body
-    response = unless body == "", do: body |> JSX.decode!,
+    response = unless body == "", do: body |> Poison.decode!,
     else: nil
 
     if (status_code == 200), do: response,
@@ -67,7 +67,7 @@ defmodule Asanaficator do
   end
 
   def json_request(method, url, body \\ "", headers \\ [], options \\ []) do
-    request!(method, url, JSX.encode!(body), headers, options) |> process_response
+    request!(method, url, Poison.encode!(body), headers, options) |> process_response
   end
 
   def raw_request(method, url, body \\ "", headers \\ [], options \\ []) do
