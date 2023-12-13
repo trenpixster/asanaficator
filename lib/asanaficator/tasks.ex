@@ -1,7 +1,41 @@
 defmodule Asanaficator.Tasks do
-import Asanaficator
-alias Asanaficator.Client
+  import Asanaficator
+  alias Asanaficator.Client
 
+  @doc """
+  Struct for Task, like all Asana structs, is primarily sufficiant for creating a task through the API and making further querys.
+
+  This structure is not exhaustive of the data that a task can contain but should be simple to expand in future.
+
+  more info on Asana tasks at: https://developers.asana.com/reference/tasks
+  """
+
+  defstruct(
+    gid: nil,
+    name: "",
+    resource_type: "",
+    resource_subtype: "default_task",
+    approval_status: nil,
+    completed: false,
+    due_at: nil,
+    due_on: nil,
+    html_notes: "null",
+    liked: false,
+    notes: "null",
+    start_at: nil,
+    start_on: nil,
+    assignee: nil,
+    assignee_section: nil,
+    #custom_fields: {} # This needs to be a custom_field struct
+    followers: [""],
+    parent: nil,
+    projects: [""],
+    tags: [""],
+    workspace: "",
+    # memberships: {} # This needs to be a project/user struct
+    dependencies: [{}],
+    dependents: [{}]
+  )
   @doc """
   Get a single pull request
   
