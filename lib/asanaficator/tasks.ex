@@ -1,4 +1,4 @@
-defmodule Asanaficator.Tasks do
+defmodule Asanaficator.Task do
   import Asanaficator
   alias Asanaficator.Client
 
@@ -13,7 +13,7 @@ defmodule Asanaficator.Tasks do
   defstruct(
     gid: nil,
     name: "",
-    resource_type: "",
+    resource_type: "task",
     resource_subtype: "default_task",
     approval_status: nil,
     completed: false,
@@ -26,16 +26,46 @@ defmodule Asanaficator.Tasks do
     start_on: nil,
     assignee: nil,
     assignee_section: nil,
-    #custom_fields: {} # This needs to be a custom_field struct
-    followers: [""],
+    custom_fields: [{}], 
+    followers: [{}],
     parent: nil,
     projects: [""],
     tags: [""],
     workspace: "",
-    # memberships: {} # This needs to be a project/user struct
+    memberships: [{}], 
     dependencies: [{}],
     dependents: [{}]
   )
+
+  @type t :: %__MODULE__{ 
+    gid: binary,
+    name: binary,
+    resource_type:  binary,
+    resource_subtype:  binary,
+    approval_status:  binary,
+    completed: boolean,
+    due_at:  binary,
+    due_on:  binary,
+    html_notes: binary, 
+    liked: boolean,
+    notes: binary,
+    start_at: binary,
+    start_on: binary,
+    #assignee: Asanaficator.User,
+    #assignee_section: Asanaficator.Section ,
+    #custom_fields: list(Asanaficator.CustomField) # This needs to be a custom_field struct
+    followers: list(Asanaficator.CustomField),
+    parent: t,
+    #projects: list(Asanaficator.Project), 
+    tags: list(binary), 
+    workspace: Asanaficator.Workspace, 
+    # memberships: list(Asanaficator.Membership) ,# This needs to be a project/user struct
+    dependencies: list(Asanaficator.Task), 
+    dependents: list(Asanaficator.Task)
+  }
+
+  @spec new() :: t
+  def new(), do: struct(Asanaficator.Task)
   @doc """
   Get a single pull request
   
@@ -44,9 +74,12 @@ defmodule Asanaficator.Tasks do
 
   more info at: https://developers.asana.com/reference/gettask  
   """
-  @spec get_task(binary | integer, Client.t, List.t) :: Asanaficator.response
+  @spec get_task(binary | integer, Client.t, List.t) :: Asanaficator.Task
   def get_task(task_id, client \\ %Client{}, params \\ []) do
-    get "tasks/#{task_id}", client, params
+    response = get "tasks/#{task_id}", client, params
+    #response_convert = Map.new(response["data"], fn {k,v} -> {String.to_atom(k), v} end)
+    #Kernel.struct(Asanaficator.Task, response_convert)
+    cast(Asanaficator.Task, response)
   end
 
 

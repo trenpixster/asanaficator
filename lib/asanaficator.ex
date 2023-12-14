@@ -40,6 +40,12 @@ defmodule Asanaficator do
     else: {status_code, response}
   end
 
+  @spec cast(module(), response) :: struct()
+  def cast(mod, resp) do
+    converted = Map.new(resp["data"], fn {k,v} -> {String.to_atom(k), v} end)
+    Kernel.struct(mod, converted)
+  end
+
   def delete(path, client, body \\ "") do
     _request(:delete, url(client, path), client.auth, body)
   end

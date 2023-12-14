@@ -3,7 +3,7 @@ import Asanaficator
 alias Asanaficator.Client
   defstruct(
       gid: nil,
-      resource_type: "",
+      resource_type: "workspace",
       name: "",
       email_domains: [],
       is_organisation: false
@@ -29,9 +29,11 @@ alias Asanaficator.Client
 
   more info at: https://developers.asana.com/reference/getworkspace
 """
-  @spec get_workspace(binary | integer, Client.t, List.t) :: Asanaficator.response
+  @spec get_workspace(binary | integer, Client.t, List.t) :: t
   def get_workspace(workspace_id, client \\ %Client{}, params \\ []) do
-    get "workspaces/#{workspace_id}", client, params
+    response = get "workspaces/#{workspace_id}", client, params
+    response_convert = Map.new(response["data"], fn {k,v} -> {String.to_atom(k), v} end)
+    Kernel.struct(Asanaficator.Workspace, response_convert)
   end
 
   @doc """
