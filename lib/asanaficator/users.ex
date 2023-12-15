@@ -1,23 +1,43 @@
-defmodule Asanaficator.Users do
+defmodule Asanaficator.User do
   import Asanaficator
   alias Asanaficator.Client
+
+  defstruct(
+    gid: nil,
+    resource_type: "user",
+    email: nil,
+    name: nil,
+    photo: nil,
+    workspaces: []
+  )
+
+@type t :: %__MODULE__ {
+    gid: binary,
+    resource_type: binary,
+    email: binary,
+    name: binary,
+    photo: list(URI.t),
+    workspaces: list(Asanaficator.Workspace)
+  }
 
   @doc """
   Get a single `user`
 
   ## Example
 
-      Asanaficator.Users.get_user 123456, client
+      Asanaficator.Users.get_user 123456, client, %{opt_fileds: gid, name}
 
   More info at: https://asana.com/developers/api-reference/users#get-single
   """
-  @spec get_user(binary, Client.t) :: Asanaficator.response
-  def get_user(user, client \\ %Client{}) do
-    get "users/#{user}", client
+  @spec get_user(binary, Client.t, List.t) :: Asanaficator.User.t
+  def get_user(user, client \\ %Client{}, params \\ []) do
+    response = get "users/#{user}", client, params
+    cast(Asanaficator.User, response)
   end
 
   @doc """
   Get the authenticated user
+  Note: The same can be achieved by doing get_user("me", client)
 
   ## Example
 
@@ -25,8 +45,9 @@ defmodule Asanaficator.Users do
 
   More info at: https://asana.com/developers/api-reference/users#get-single
   """
-  @spec me(Client.t) :: Asanaficator.response
-  def me(client) do
-    get "users/me", client
+  @spec me(Client.t, List.t) :: Asanaficator.User.t
+  def me(client, params \\ []) do
+    response = get "users/me", client, params
+    cast(Asanaficator.User, response)
   end
 end

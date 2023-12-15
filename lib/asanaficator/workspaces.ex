@@ -29,11 +29,10 @@ alias Asanaficator.Client
 
   more info at: https://developers.asana.com/reference/getworkspace
 """
-  @spec get_workspace(binary | integer, Client.t, List.t) :: t
+  @spec get_workspace(binary | integer, Client.t, List.t) :: Asanaficator.Workspace.t
   def get_workspace(workspace_id, client \\ %Client{}, params \\ []) do
-    response = get "workspaces/#{workspace_id}", client, params
-    response_convert = Map.new(response["data"], fn {k,v} -> {String.to_atom(k), v} end)
-    Kernel.struct(Asanaficator.Workspace, response_convert)
+    response = get("workspaces/#{workspace_id}", client, params)
+    cast(Asanaficator.Workspace, response)
   end
 
   @doc """
@@ -46,6 +45,6 @@ alias Asanaficator.Client
   """
   @spec get_workspaces(Client.t, List.t) :: Asanaficator.response
   def get_workspaces(client \\ %Client{}, params \\ []) do
-    get "workspaces", client, params
+    get("workspaces", client, params)
   end
 end

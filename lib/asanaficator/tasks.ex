@@ -74,7 +74,7 @@ defmodule Asanaficator.Task do
 
   more info at: https://developers.asana.com/reference/gettask  
   """
-  @spec get_task(binary | integer, Client.t, List.t) :: Asanaficator.Task
+  @spec get_task(binary | integer, Client.t, List.t) :: Asanaficator.Task.t
   def get_task(task_id, client \\ %Client{}, params \\ []) do
     response = get "tasks/#{task_id}", client, params
     #response_convert = Map.new(response["data"], fn {k,v} -> {String.to_atom(k), v} end)
@@ -94,7 +94,7 @@ defmodule Asanaficator.Task do
   """
   @spec get_tasks(Client.t, List.t) :: Asanaficator.response
   def get_tasks(client \\ %Client{}, params \\ []) do
-    get "tasks", client, params
+    get("tasks", client, params)
   end
 
 
@@ -108,6 +108,6 @@ defmodule Asanaficator.Task do
   """
   @spec get_project_tasks(binary | integer, Client.t, List.t) :: Asanaficator.response
   def get_project_tasks(project_id, client \\ %Client{}, params \\ []) do
-    get "projects/#{project_id}/tasks", client, params
+    get("projects/#{project_id}/tasks", client, params)
   end
 end
