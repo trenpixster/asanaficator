@@ -11,7 +11,7 @@ defmodule Asanaficator.User do
     workspaces: []
   )
 
-@type t :: %__MODULE__ {
+  @type t :: %__MODULE__ {
     gid: binary,
     resource_type: binary,
     email: binary,
@@ -19,6 +19,9 @@ defmodule Asanaficator.User do
     photo: list(URI.t),
     workspaces: list(Asanaficator.Workspace)
   }
+
+  @nest_fields %{workspaces: Asanaficator.Workspace}
+  def get_nest_fields(), do: @nest_fields
 
   @doc """
   Get a single `user`
@@ -29,10 +32,10 @@ defmodule Asanaficator.User do
 
   More info at: https://asana.com/developers/api-reference/users#get-single
   """
-  @spec get_user(binary, Client.t, List.t) :: Asanaficator.User.t
-  def get_user(user, client \\ %Client{}, params \\ []) do
-    response = get "users/#{user}", client, params
-    cast(Asanaficator.User, response)
+  @spec get_user(Client.t, integer|binary,  List.t) :: Asanaficator.User.t
+  def get_user(client \\ %Client{}, user_id, params \\ []) do
+    response = get(client, "users/#{user_id}", params)
+    cast(Asanaficator.User, response, @nest_fields)
   end
 
   @doc """
@@ -48,6 +51,6 @@ defmodule Asanaficator.User do
   @spec me(Client.t, List.t) :: Asanaficator.User.t
   def me(client, params \\ []) do
     response = get "users/me", client, params
-    cast(Asanaficator.User, response)
+    cast(Asanaficator.User, response, @nest_fields)
   end
 end

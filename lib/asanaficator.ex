@@ -40,29 +40,39 @@ defmodule Asanaficator do
     else: {status_code, response}
   end
 
-  @spec cast(module(), response) :: struct()
-  def cast(mod, resp) do
-    converted = Map.new(resp["data"], fn {k,v} -> {String.to_atom(k), v} end)
+  @spec cast(module(), Asanaficator.response, Map) :: struct()
+  def cast(mod, resp, nest_fields \\ %{}) do
+    converted = Map.new(resp, fn {k,v} -> 
+      case Map.has_key?(nest_fields, k) do
+        true -> 
+        IO.puts("Nested key found: #{k}")
+        {String.to_atom(k), cast(nest_fields[k], v, nest_fields[k].get_nest_fields)} 
+
+        _ -> {String.to_atom(k), v}
+      end
+    end)
     Kernel.struct(mod, converted)
   end
 
-  def delete(path, client, body \\ "") do
+  
+
+  def delete(client, path, body \\ "") do
     _request(:delete, url(client, path), client.auth, body)
   end
 
-  def post(path, client, body \\ "") do
+  def post(client, path, body \\ "") do
     _request(:post, url(client, path), client.auth, body)
   end
 
-  def patch(path, client, body \\ "") do
+  def patch(client, path, body \\ "") do
     _request(:patch, url(client, path), client.auth, body)
   end
 
-  def put(path, client, body \\ "") do
+  def put(client, path, body \\ "") do
     _request(:put, url(client, path), client.auth, body)
   end
 
-  def get(path, client, params \\ []) do
+  def get(client, path, params \\ []) do
     url = url(client, path)
     url = <<url :: binary, build_qs(params) :: binary>>
     _request(:get, url, client.auth)

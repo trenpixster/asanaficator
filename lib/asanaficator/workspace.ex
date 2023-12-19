@@ -17,6 +17,9 @@ alias Asanaficator.Client
       is_organisation: boolean
   }
   
+  @nest_fields %{}
+  def get_nest_fields(), do: @nest_fields
+
   @spec new() :: t
   def new(), do: struct(Asanaficator.Workspace)
 
@@ -29,9 +32,9 @@ alias Asanaficator.Client
 
   more info at: https://developers.asana.com/reference/getworkspace
 """
-  @spec get_workspace(binary | integer, Client.t, List.t) :: Asanaficator.Workspace.t
-  def get_workspace(workspace_id, client \\ %Client{}, params \\ []) do
-    response = get("workspaces/#{workspace_id}", client, params)
+  @spec get_workspace(Client.t, binary|integer, List.t) :: Asanaficator.Workspace.t
+  def get_workspace(client \\ %Client{}, workspace_id, params \\ []) do
+    response = get(client, "workspaces/#{workspace_id}", params)
     cast(Asanaficator.Workspace, response)
   end
 
@@ -45,6 +48,6 @@ alias Asanaficator.Client
   """
   @spec get_workspaces(Client.t, List.t) :: Asanaficator.response
   def get_workspaces(client \\ %Client{}, params \\ []) do
-    get("workspaces", client, params)
+    get(client, "workspaces", params)
   end
 end

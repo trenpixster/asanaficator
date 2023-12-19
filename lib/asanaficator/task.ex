@@ -51,10 +51,10 @@ defmodule Asanaficator.Task do
     notes: binary,
     start_at: binary,
     start_on: binary,
-    #assignee: Asanaficator.User,
+    assignee: Asanaficator.User,
     #assignee_section: Asanaficator.Section ,
     #custom_fields: list(Asanaficator.CustomField) # This needs to be a custom_field struct
-    followers: list(Asanaficator.CustomField),
+    followers: list(Asanaficator.User),
     parent: t,
     #projects: list(Asanaficator.Project), 
     tags: list(binary), 
@@ -64,22 +64,34 @@ defmodule Asanaficator.Task do
     dependents: list(Asanaficator.Task)
   }
 
+  @nest_fields %{
+    assignee: Asanaficator.User,
+    #assignee_section: Asanaficator.Section,
+    #custom_fields: Asanaficator.CustomFields,
+    followers: Asanaficator.User,
+    #projects: Asanaficator.Project,
+    parent: Asanaficator.Task,
+    workspace: Asanaficator.Workspace,
+    #memberships: Asanaficator.Membership,
+    dependencies: Asanaficator.Task,
+    dependents: Asanaficator.Task
+  }
+
+  def get_nest_fields(), do: @nest_fields
+
   @spec new() :: t
   def new(), do: struct(Asanaficator.Task)
   @doc """
-  Get a single pull request
-  
+  Get a single task  
   ## Example
     Asanaficator.Tasks.get_task(1337 :: task_id, client, {optfields: asignee,custom_fields})
 
   more info at: https://developers.asana.com/reference/gettask  
   """
-  @spec get_task(binary | integer, Client.t, List.t) :: Asanaficator.Task.t
-  def get_task(task_id, client \\ %Client{}, params \\ []) do
-    response = get "tasks/#{task_id}", client, params
-    #response_convert = Map.new(response["data"], fn {k,v} -> {String.to_atom(k), v} end)
-    #Kernel.struct(Asanaficator.Task, response_convert)
-    cast(Asanaficator.Task, response)
+  @spec get_task(Client.t, integer | binary, List.t) :: Asanaficator.Task.t
+  def get_task(client \\ %Client{}, task_id, params \\ []) do
+    response = get(client, "tasks/#{task_id}", params)
+    cast(Asanaficator.Task, response["data"], @nest_fields)
   end
 
 
@@ -94,7 +106,7 @@ defmodule Asanaficator.Task do
   """
   @spec get_tasks(Client.t, List.t) :: Asanaficator.response
   def get_tasks(client \\ %Client{}, params \\ []) do
-    get("tasks", client, params)
+    get(client, "tasks", params)
   end
 
 
@@ -106,8 +118,8 @@ defmodule Asanaficator.Task do
 
   more info at: https://developers.asana.com/reference/gettasksforproject
   """
-  @spec get_project_tasks(binary | integer, Client.t, List.t) :: Asanaficator.response
-  def get_project_tasks(project_id, client \\ %Client{}, params \\ []) do
-    get("projects/#{project_id}/tasks", client, params)
+  @spec get_project_tasks(Client.t, binary | integer, List.t) :: Asanaficator.response
+  def get_project_tasks(client \\ %Client{}, project_id, params \\ []) do
+    get(client, "projects/#{project_id}/tasks", params)
   end
 end
