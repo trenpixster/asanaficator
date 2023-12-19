@@ -42,13 +42,14 @@ defmodule Asanaficator do
 
   @spec cast(module(), Asanaficator.response, Map) :: struct()
   def cast(mod, resp, nest_fields \\ %{}) do
-    converted = Map.new(resp, fn {k,v} -> 
+    converted = Map.new(resp, fn {k,v} ->
+      k = String.to_atom(k) 
       case Map.has_key?(nest_fields, k) do
         true -> 
         IO.puts("Nested key found: #{k}")
-        {String.to_atom(k), cast(nest_fields[k], v, nest_fields[k].get_nest_fields)} 
+        {k, cast(nest_fields[k], v, nest_fields[k].get_nest_fields)} 
 
-        _ -> {String.to_atom(k), v}
+        _ -> {k, v}
       end
     end)
     Kernel.struct(mod, converted)
