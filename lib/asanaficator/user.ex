@@ -50,7 +50,7 @@ defmodule Asanaficator.User do
   """
   @spec me(Client.t, List.t) :: Asanaficator.User.t
   def me(client, params \\ []) do
-    response = get "users/me", client, params
-    cast(Asanaficator.User, response, @nest_fields)
+    response = get client, "users/me", params
+    cast(Asanaficator.User, response["data"], @nest_fields)
   end
 end

@@ -31,7 +31,7 @@ defmodule Asanaficator.Task do
     parent: nil,
     projects: [""],
     tags: [""],
-    workspace: "",
+    workspace: nil,
     memberships: [{}], 
     dependencies: [{}],
     dependents: [{}]
@@ -106,7 +106,8 @@ defmodule Asanaficator.Task do
   """
   @spec get_tasks(Client.t, List.t) :: Asanaficator.response
   def get_tasks(client \\ %Client{}, params \\ []) do
-    get(client, "tasks", params)
+    response = get(client, "tasks", params)
+    cast(Asanaficator.Task, response["data"], @nest_fields)
   end
 
 
@@ -120,6 +121,7 @@ defmodule Asanaficator.Task do
   """
   @spec get_project_tasks(Client.t, binary | integer, List.t) :: Asanaficator.response
   def get_project_tasks(client \\ %Client{}, project_id, params \\ []) do
-    get(client, "projects/#{project_id}/tasks", params)
+    response = get(client, "projects/#{project_id}/tasks", params)
+    cast(Asanaficator.Task, response["data"], @nest_fields)
   end
 end

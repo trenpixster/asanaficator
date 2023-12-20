@@ -71,7 +71,8 @@ defmodule Asanaficator.Team do
     """
   @spec get_workspace_teams(Client.t, binary | integer, List.t) :: Asanaficator.response
   def get_workspace_teams(client \\ %Client{}, workspace_id, params \\ []) do
-    get(client, "workspaces/#{workspace_id}/teams", params)
+    response = get(client, "workspaces/#{workspace_id}/teams", params)
+    cast(Asanaficator.Team, response["data"], @nest_fields)
   end
     
 

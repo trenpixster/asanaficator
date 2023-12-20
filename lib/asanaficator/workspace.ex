@@ -35,7 +35,7 @@ alias Asanaficator.Client
   @spec get_workspace(Client.t, binary|integer, List.t) :: Asanaficator.Workspace.t
   def get_workspace(client \\ %Client{}, workspace_id, params \\ []) do
     response = get(client, "workspaces/#{workspace_id}", params)
-    cast(Asanaficator.Workspace, response)
+    cast(Asanaficator.Workspace, response["data"])
   end
 
   @doc """
@@ -48,6 +48,7 @@ alias Asanaficator.Client
   """
   @spec get_workspaces(Client.t, List.t) :: Asanaficator.response
   def get_workspaces(client \\ %Client{}, params \\ []) do
-    get(client, "workspaces", params)
+  response = get(client, "workspaces", params)
+  cast(Asanaficator.Workspace, response["data"])
   end
 end

@@ -40,22 +40,38 @@ defmodule Asanaficator do
     else: {status_code, response}
   end
 
-  @spec cast(module(), Asanaficator.response, Map) :: struct()
-  def cast(mod, resp, nest_fields \\ %{}) do
-    converted = Map.new(resp, fn {k,v} ->
-      k = String.to_atom(k) 
-      case Map.has_key?(nest_fields, k) do
-        true -> 
-        IO.puts("Nested key found: #{k}")
-        {k, cast(nest_fields[k], v, nest_fields[k].get_nest_fields)} 
+@spec cast(module(), Asanaficator.response, Map) :: struct()
+def cast(mod, resp, nest_fields \\ %{}) do
+  case resp do
+    %{} = map ->
+      converted = Map.new(map, fn {k, v} ->
+        k = String.to_atom(k)
+        case Map.has_key?(nest_fields, k) do
+          true ->
+            IO.puts("Nested key found: #{k}")
+            {k, cast(nest_fields[k], v, nest_fields[k].get_nest_fields())}
+          _ -> {k, v}
+        end
+      end)
+      Kernel.struct(mod, converted)
 
-        _ -> {k, v}
-      end
-    end)
-    Kernel.struct(mod, converted)
+    [head | tail] when is_list(tail) ->
+      [cast(mod, head, nest_fields) | cast(mod, tail, nest_fields)]
+
+    [] ->
+      nil
+
+    _ ->
+      resp
   end
+end
 
-  
+#  @spec cast(module(), [Asanaficator.response], Map) :: struct()
+#  def cast(mod, [head|tail], nest_fields) do
+#    resp = cast(mod, head, nest_fields)
+#    resps = cast(mod, tail, nest_fields)
+#    [resp|resps]
+#  end 
 
   def delete(client, path, body \\ "") do
     _request(:delete, url(client, path), client.auth, body)
