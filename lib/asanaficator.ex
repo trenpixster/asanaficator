@@ -31,7 +31,7 @@ defmodule Asanaficator do
   @spec process_response(HTTPoison.Response.t) :: response
   def process_response(response) do
     status_code = response.status_code
-    headers = response.headers
+    _headers = response.headers
     body = response.body
     response = unless body == "", do: body |> Poison.decode!,
     else: nil
@@ -108,7 +108,7 @@ end
   end
 
   @spec url(client :: Client.t, path :: binary) :: binary
-  defp url(client = %Client{endpoint: endpoint}, path) do
+  defp url(%Client{endpoint: endpoint}, path) do
     endpoint <> path
   end
 

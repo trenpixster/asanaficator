@@ -6,7 +6,7 @@ alias Asanaficator.Client
       resource_type: "workspace",
       name: "",
       email_domains: [],
-      is_organisation: false
+      is_organization: false
   )
 
   @type t :: %__MODULE__{
@@ -14,7 +14,7 @@ alias Asanaficator.Client
       resource_type: binary,
       name: binary,
       email_domains: list(binary),
-      is_organisation: boolean
+      is_organization: boolean
   }
   
   @nest_fields %{}
