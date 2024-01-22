@@ -19,9 +19,9 @@ defmodule Asanaficator.Task do
     completed: false,
     due_at: nil,
     due_on: nil,
-    html_notes: "null",
+    html_notes: nil,
     liked: false,
-    notes: "null",
+    notes: nil,
     start_at: nil,
     start_on: nil,
     assignee: nil,
@@ -104,7 +104,7 @@ defmodule Asanaficator.Task do
 
   More info at: https://developers.asana.com/reference/gettasks
   """
-  @spec get_tasks(Client.t, List.t) :: Asanaficator.response
+  @spec get_tasks(Client.t, List.t) :: [Asanaficator.Task] 
   def get_tasks(client \\ %Client{}, params \\ []) do
     response = get(client, "tasks", params)
     cast(Asanaficator.Task, response["data"], @nest_fields)
@@ -124,4 +124,89 @@ defmodule Asanaficator.Task do
     response = get(client, "projects/#{project_id}/tasks", params)
     cast(Asanaficator.Task, response["data"], @nest_fields)
   end
+
+  @doc """ 
+  Get tasks from a given section.
+
+  ## Example
+    Asanaficator.Tasks.get_section_tasks(313313 :: section_id, client, {optfields: asignee}
+
+    more info at: https://developers.asana.com/reference/gettasksforsection
+  """
+  @spec get_section_tasks(Client.t, binary | integer, List.t) :: Asanaficator.response
+  def get_section_tasks(client \\ %Client{}, section_id, params \\ []) do
+    response = get(client, "sections/#{section_id}/tasks", params)
+    cast(Asanaficator.Task, response["data"], @nest_fields)
+  end
+
+  @doc """ 
+  Get tasks from a given tag.
+
+  ## Example
+    Asanaficator.Tasks.get_tag_tasks(313313 :: tag_id, client, {optfields: asignee}
+
+    more info at: https://developers.asana.com/reference/gettasksfortag
+  """
+  @spec get_tag_tasks(Client.t, binary | integer, List.t) :: Asanaficator.response
+  def get_tag_tasks(client \\ %Client{}, tag_id, params \\ []) do
+    response = get(client, "tags/#{tag_id}/tasks", params)
+    cast(Asanaficator.Task, response["data"], @nest_fields)
+  end
+
+  @doc """ 
+  Get tasks from a given user_task_list.
+
+  ## Example
+    Asanaficator.Tasks.get_user_task_list_tasks(313313 :: user_task_list_id, client, {optfields: asignee}
+
+    more info at: https://developers.asana.com/reference/gettasksforusertasklist
+  """
+  @spec get_user_task_list_tasks(Client.t, binary | integer, List.t) :: [Asanaficator.Task]
+  def get_user_task_list_tasks(client \\ %Client{}, user_task_list_id, params \\ []) do
+    response = get(client, "user_task_lists/#{user_task_list_id}/tasks", params)
+    cast(Asanaficator.Task, response["data"], @nest_fields)
+  end
+
+  @doc """
+  Get subtasks of a given task.
+
+  ## Example
+    Asanaficator.Task.get_subtasks(313313 :: task_id, client, {optfields: asignee}
+
+    more info at: https://developers.asana.com/reference/getsubtasksfortask
+  """
+  @spec get_subtasks(Client.t, binary | integer, List.t) :: [Asanaficator.Task]
+  def get_subtasks(client \\ %Client{}, task_id, params \\ []) do 
+    response =get(client, "tasks/#{task_id}/subtasks", params)
+    cast(Asanaficator.Task, response["data"], @nest_fields)
+  end
+
+  @doc """
+  Get dependencies of a given task.
+
+  ## Example
+    Asanaficator.Task.get_dependencies(313313 :: task_id, client, {optfields: asignee}
+
+    more info at: https://developers.asana.com/reference/getdependenciesfortask
+  """
+  @spec get_dependencies(Client.t, binary | integer, List.t) :: [Asanaficator.Task]
+  def get_dependencies(client \\ %Client{}, task_id, params \\ []) do 
+    response =get(client, "tasks/#{task_id}/dependencies", params)
+    cast(Asanaficator.Task, response["data"], @nest_fields)
+  end
+
+  @doc """
+  Get dependents of a given task.
+
+  ## Example
+    Asanaficator.Task.get_dependents(313313 :: task_id, client, {optfields: asignee}
+
+    more info at: https://developers.asana.com/reference/getdependentsfortask
+  """
+  @spec get_dependents(Client.t, binary | integer, List.t) :: [Asanaficator.Task]
+  def get_dependents(client \\ %Client{}, task_id, params \\ []) do 
+    response =get(client, "tasks/#{task_id}/dependents", params)
+    cast(Asanaficator.Task, response["data"], @nest_fields)
+  end
+
 end

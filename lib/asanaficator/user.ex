@@ -53,4 +53,20 @@ defmodule Asanaficator.User do
     response = get client, "users/me", params
     cast(Asanaficator.User, response["data"], @nest_fields)
   end
+
+
+  @doc """
+  Get users based on given clauses
+  Must specify one of project or workspace
+
+  ## Example
+    Asanaficator.User.get_users(client, {workspace: 123123, team: 123123})
+  
+  more info at: https://developers.asana.com/reference/getusers
+  """
+  @spec get_users(Client.t, List.t) :: [Asanaficator.User]
+  def get_users(client \\ %Client{}, params \\ []) do
+    response = get(client, "users", params)
+    cast(Asanaficator.User, response["data"], @nest_fields)
+  end
 end
